@@ -11,6 +11,9 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    env:
+      IMAGE_TAG: ${{ github.sha }}   # 커밋 SHA를 이미지 태그로 사용
+
     steps:
       - uses: actions/checkout@v3
 
@@ -29,7 +32,7 @@ jobs:
           flake8 .
         working-directory: ./fastapi_back
 
-      - run: docker build -t xowldks1003/fastapi-app:latest ./fastapi_back
+      - run: docker build -t xowldks1003/fastapi-app:${IMAGE_TAG} ./fastapi_back
 
       # Frontend 빌드
       - uses: actions/setup-node@v3
@@ -42,7 +45,7 @@ jobs:
       - run: npm run build
         working-directory: ./react_front
 
-      - run: docker build -t xowldks1003/react-frontend:latest ./react_front
+      - run: docker build -t xowldks1003/react-frontend:${IMAGE_TAG} ./react_front
 
       # DockerHub 로그인 후 Push
       - uses: docker/login-action@v2
@@ -50,5 +53,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - run: docker push xowldks1003/fastapi-app:latest
-      - run: docker push xowldks1003/react-frontend:latest
+      - run: docker push xowldks1003/fastapi-app:${IMAGE_TAG}
+      - run: docker push xowldks1003/react-frontend:${IMAGE_TAG}
+
