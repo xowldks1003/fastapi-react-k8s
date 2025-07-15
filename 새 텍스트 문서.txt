@@ -1,0 +1,15 @@
+kubectl apply -f mysql-secret.yaml
+kubectl apply -f backend-deployment.yaml
+kubectl apply -f backend-service.yaml
+kubectl apply -f nginx-config.yaml
+kubectl apply -f frontend-deployment.yaml
+kubectl apply -f frontend-service.yaml
+kubectl apply -f ingress.yaml
+
+mysql -h xowldksmysql.mysql.database.azure.com -u xowldks1003 -p
+mysql -h xowldksmysql.privatelink.mysql.database.azure.com -u xowldks1003 -p
+mysql -h 10.0.20.4 -u xowldks1003 -p
+Test-NetConnection xowldksmysql.privatelink.mysql.database.azure.com -Port 3306
+프라이빗 dns 영역 레코드집합에 주소 있음 이거 hosts 매핑
+8.0.21
+CREATE DATABASE fastapi_db;
