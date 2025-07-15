@@ -3,10 +3,13 @@ from pydantic import BaseModel
 import os
 import mysql.connector
 
+
 app = FastAPI()
+
 
 class Post(BaseModel):
     content: str
+
 
 def get_db_connection():
     return mysql.connector.connect(
@@ -15,18 +18,22 @@ def get_db_connection():
         user=os.getenv("MYSQL_USER"),
         password=os.getenv("MYSQL_PASSWORD"),
         database=os.getenv("MYSQL_DB"),
-        autocommit=True
+        autocommit=True,
     )
+
 
 @app.get("/api/posts")
 def get_posts():
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT id, content, created_at FROM posts ORDER BY created_at DESC")
+    cursor.execute(
+        "SELECT id, content, created_at FROM posts ORDER BY created_at DESC"
+    )
     posts = cursor.fetchall()
     cursor.close()
     conn.close()
     return posts
+
 
 @app.post("/api/posts")
 def create_post(post: Post):
@@ -40,4 +47,5 @@ def create_post(post: Post):
     finally:
         cursor.close()
         conn.close()
+
     return {"message": "Post created"}
