@@ -19,6 +19,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0  # 반드시 전체 히스토리 받아야 커밋 후 푸시 가능
+          persist-credentials: false 
 
       # Backend 빌드
       - uses: actions/setup-python@v4
