@@ -9,11 +9,12 @@ on:
       - main
 
 jobs:
-  build-backend:
+  build-and-push:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
+      # Backend 빌드
       - uses: actions/setup-python@v4
         with:
           python-version: 3.11
@@ -30,11 +31,7 @@ jobs:
 
       - run: docker build -t xowldks1003/fastapi-app:latest ./fastapi_back
 
-  build-frontend:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
+      # Frontend 빌드
       - uses: actions/setup-node@v3
         with:
           node-version: 20
@@ -47,16 +44,11 @@ jobs:
 
       - run: docker build -t xowldks1003/react-frontend:latest ./react_front
 
-  push-images:
-    needs: [build-backend, build-frontend]
-    runs-on: ubuntu-latest
-    steps:
+      # DockerHub 로그인 후 Push
       - uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - run: docker push xowldks1003/fastapi-app:latest
-
       - run: docker push xowldks1003/react-frontend:latest
-
