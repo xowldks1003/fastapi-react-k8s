@@ -13,9 +13,12 @@ jobs:
     runs-on: ubuntu-latest
     env:
       IMAGE_TAG: ${{ github.sha }}   # 커밋 SHA를 이미지 태그로 사용
+      PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # 반드시 전체 히스토리 받아야 커밋 후 푸시 가능
 
       # Backend 빌드
       - uses: actions/setup-python@v4
@@ -67,4 +70,4 @@ jobs:
           git config user.email "actions@github.com"
           git add backend-deployment.yaml frontend-deployment.yaml
           git commit -m "Update image tags to ${IMAGE_TAG}"
-          git push origin main
+          git push https://xowldks1003:${PAT_TOKEN}@github.com/xowldks1003/fastapi-react-k8s.git HEAD:main
