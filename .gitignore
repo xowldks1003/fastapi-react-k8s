@@ -1,0 +1,21 @@
+# 민감 정보 파일 (Git에 올리지 말 것)
+mysql-secret.yaml
+*.env
+
+# Node.js 모듈 및 빌드 결과물
+node_modules/
+dist/
+build/
+
+# Vite 빌드 결과 (react_front/dist)
+react_front/dist/
+
+# OS별 임시파일
+.DS_Store
+Thumbs.db
+
+# IDE/에디터 설정 파일
+.vscode/
+.idea/
+*.iml
+
