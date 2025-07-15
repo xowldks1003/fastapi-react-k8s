@@ -56,3 +56,15 @@ jobs:
       - run: docker push xowldks1003/fastapi-app:${IMAGE_TAG}
       - run: docker push xowldks1003/react-frontend:${IMAGE_TAG}
 
+      # 배포파일 내 이미지 태그 변경 (sed는 Linux 환경용, 윈도우 GitHub Actions도 Ubuntu이므로 가능)
+      - run: |
+          sed -i "s|image: xowldks1003/fastapi-app:.*|image: xowldks1003/fastapi-app:${IMAGE_TAG}|g" backend-deployment.yaml
+          sed -i "s|image: xowldks1003/react-frontend:.*|image: xowldks1003/react-frontend:${IMAGE_TAG}|g" frontend-deployment.yaml
+
+      # 변경된 배포파일 git에 커밋 & 푸시
+      - run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add backend-deployment.yaml frontend-deployment.yaml
+          git commit -m "Update image tags to ${IMAGE_TAG}"
+          git push origin main
