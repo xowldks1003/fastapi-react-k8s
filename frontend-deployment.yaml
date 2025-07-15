@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: react-frontend
-          image: xowldks1003/react-frontend:<tag> # ← 본인 이미지로 수정
+          image: xowldks1003/react-frontend:0bc43837244dee4ac9879ca335874139c4ef01b6
           ports:
             - containerPort: 80
