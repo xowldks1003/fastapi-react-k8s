@@ -40,7 +40,10 @@ def create_post(post: Post):
     conn = get_db_connection()
     cursor = conn.cursor()
     try:
-        cursor.execute("INSERT INTO posts (content) VALUES (%s)", (post.content,))
+        cursor.execute(
+            "INSERT INTO posts (content) VALUES (%s)",
+            (post.content,),
+        )
         conn.commit()
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
