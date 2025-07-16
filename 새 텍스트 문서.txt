@@ -13,3 +13,4 @@ Test-NetConnection xowldksmysql.privatelink.mysql.database.azure.com -Port 3306
 프라이빗 dns 영역 레코드집합에 주소 있음 이거 hosts 매핑
 8.0.21
 CREATE DATABASE fastapi_db;
+;
