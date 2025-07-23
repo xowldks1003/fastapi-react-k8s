@@ -5,8 +5,8 @@ on:
     branches:
       - main
     paths-ignore:
-      - 'backend-deployment.yaml'
-      - 'frontend-deployment.yaml'
+      - 'backend-rollout.yaml'
+      - 'frontend-rollout.yaml'
   pull_request:
     branches:
       - main
