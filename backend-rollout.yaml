@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: fastapi
-        image: xowldks1003/fastapi-app:ac9a307f976d20e44ad08d6c5566747024761b49
+        image: xowldks1003/fastapi-app:280b90e69e3943f560016c54b3f59c1d97553c65
         ports:
         - containerPort: 8000
         envFrom:
