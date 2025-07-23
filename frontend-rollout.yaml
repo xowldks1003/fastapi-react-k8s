@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: react-frontend
-        image: xowldks1003/react-frontend:47e57e571701e4aac046bddb1c7c637ba5a8ae11
+        image: xowldks1003/react-frontend:cf46b59c5bf984d92896979722fed02b01c07474
         ports:
         - containerPort: 80
   strategy:
