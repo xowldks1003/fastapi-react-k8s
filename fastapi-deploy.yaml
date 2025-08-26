@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-blob
+  labels:
+    app: fastapi
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: fastapi
+  template:
+    metadata:
+      labels:
+        app: fastapi
+    spec:
+      containers:
+      - name: fastapi
+        image: xowldks1003/fastapi-blob:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: STORAGE_ACCOUNT_NAME
+          value: "xowldks1003storage"   # terraform에서 만든 값 넣기
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapi-blob-service
+spec:
+  selector:
+    app: fastapi
+  ports:
+  - protocol: TCP
+    port: 8000
+    targetPort: 8000
+  type: ClusterIP
+
