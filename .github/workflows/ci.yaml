@@ -76,3 +76,82 @@ jobs:
           git add backend-rollout.yaml frontend-rollout.yaml
           git commit -m "Update image tags to ${IMAGE_TAG}"
           git push https://xowldks1003:${PAT_TOKEN}@github.com/xowldks1003/fastapi-react-k8s.git main
+=======
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'backend-deployment.yaml'
+      - 'frontend-deployment.yaml'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_TAG: ${{ github.sha }}   # 커밋 SHA를 이미지 태그로 사용
+      PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # 반드시 전체 히스토리 받아야 커밋 후 푸시 가능
+          persist-credentials: false 
+
+      # Backend 빌드
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+        working-directory: ./fastapi_back
+
+      - run: |
+          pip install flake8
+          flake8 .
+        working-directory: ./fastapi_back
+
+      - run: docker build -t xowldks1003/fastapi-app:${IMAGE_TAG} ./fastapi_back
+
+      # Frontend 빌드
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - run: npm install
+        working-directory: ./react_front
+
+      - run: npm run build
+        working-directory: ./react_front
+
+      - run: docker build -t xowldks1003/react-frontend:${IMAGE_TAG} ./react_front
+
+      # DockerHub 로그인 후 Push
+      - uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - run: docker push xowldks1003/fastapi-app:${IMAGE_TAG}
+      - run: docker push xowldks1003/react-frontend:${IMAGE_TAG}
+
+      # 배포파일 내 이미지 태그 변경 (sed는 Linux 환경용, 윈도우 GitHub Actions도 Ubuntu이므로 가능)
+      - run: |
+          sed -i "s|image: xowldks1003/fastapi-app:.*|image: xowldks1003/fastapi-app:${IMAGE_TAG}|g" backend-deployment.yaml
+          sed -i "s|image: xowldks1003/react-frontend:.*|image: xowldks1003/react-frontend:${IMAGE_TAG}|g" frontend-deployment.yaml
+
+
+      # 변경된 배포파일 git에 커밋 & 푸시
+      - run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add backend-deployment.yaml frontend-deployment.yaml
+          git commit -m "Update image tags to ${IMAGE_TAG}"
+          git push https://xowldks1003:${PAT_TOKEN}@github.com/xowldks1003/fastapi-react-k8s.git main

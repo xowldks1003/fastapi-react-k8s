@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: argo-rollouts
+  namespace: monitoring          # Prometheus가 설치된 네임스페이스
+  labels:
+    release: prometheus          # Helm 설치 시 release 이름과 맞춰야 함
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: argo-rollouts
+  namespaceSelector:
+    matchNames:
+      - argo-rollouts            # Argo Rollouts가 설치된 네임스페이스
+  endpoints:
+    - port: metrics
+      interval: 15s
